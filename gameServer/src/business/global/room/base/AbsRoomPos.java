@@ -448,11 +448,30 @@ public abstract class AbsRoomPos implements Serializable {
      */
     public void saveSportsPoint(double sportsPointGame, double sportsPointRoom) {
         if (null != this.getClubMemberBO() && RoomTypeEnum.UNION.equals(this.getRoom().getRoomTypeEnum())) {
-            if (sportsPointRoom > 0) {
+            // 阈值限制：按累计竞技点不超过 ±roomSportsThreshold 截断本局变化量
+            double finalGamePointChange = CommMath.subDouble(sportsPointGame, sportsPointRoom);
+            double roomSportsThreshold = this.getRoom().getBaseRoomConfigure().getBaseCreateRoom().getRoomSportsThreshold();
+            if (roomSportsThreshold > 0D) {
+                double currentTotalPoint = this.getPoint();
+                double projectedTotalPoint = CommMath.addDouble(currentTotalPoint, finalGamePointChange);
+                if (Math.abs(projectedTotalPoint) > roomSportsThreshold) {
+                    if (projectedTotalPoint > 0D) {
+                        finalGamePointChange = CommMath.subDouble(roomSportsThreshold, currentTotalPoint);
+                    } else {
+                        finalGamePointChange = CommMath.subDouble(-roomSportsThreshold, currentTotalPoint);
+                    }
+                }
+            }
+
+            // 先落房间竞技点消耗（固定不变）
+            if (sportsPointRoom > 0D) {
                 this.getClubMemberBO().saveRoomSportsPoint(player, this.getRoom().getSpecialRoomId(), -sportsPointRoom, this.getRoom().getBaseRoomConfigure().getGameType().getId(), this.getPlayer().getCityId(), getRoom().getRoomID(), getRoom().getRoomKey());
             }
-            if (0 != sportsPointGame) {
-                this.getClubMemberBO().saveGameSportsPoint(player, this.getRoom().getSpecialRoomId(), sportsPointGame, this.getRoom().getBaseRoomConfigure().getGameType().getId(), this.getPlayer().getCityId(), getRoom().getRoomID(), getRoom().getRoomKey());
+
+            // 再落“截断后的游戏竞技点变化”，以保证累计刚好触达阈值边界
+            if (0D != finalGamePointChange) {
+                double adjustedGameSportsPoint = CommMath.addDouble(finalGamePointChange, sportsPointRoom);
+                this.getClubMemberBO().saveGameSportsPoint(player, this.getRoom().getSpecialRoomId(), adjustedGameSportsPoint, this.getRoom().getBaseRoomConfigure().getGameType().getId(), this.getPlayer().getCityId(), getRoom().getRoomID(), getRoom().getRoomKey());
             }
         }
     }

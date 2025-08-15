@@ -798,6 +798,111 @@ public class PDKRoomSet extends AbsRoomSet {
                 }
             }
         }
+         // 你的新条件
+    if (checkYourSpecialCondition()) {
+        room.isEnd = true;
+        checkAndTruncatePointsToThreshold();
+        // 记录结束原因（可选）
+        CommLogD.info("房间因特殊条件结束: RoomID={}, 原因={}", room.getRoomID(), "你的结束原因");
+    }
+}
+
+
+    /**
+     * 检查特殊结束条件
+     * 比较总积分和竞技点阈值
+     */
+    private boolean checkYourSpecialCondition() {
+        try {
+            // 正确的获取方式：通过 BaseCreateRoom 获取
+            Double roomSportsThreshold = this.room.getBaseRoomConfigure().getBaseCreateRoom().getRoomSportsThreshold();
+            
+            // 检查totalPointResult是否已经计算完成
+            if (CollectionUtils.isEmpty(this.totalPointResult)) {
+                CommLogD.warn("totalPointResult为空，无法进行特殊条件判断");
+                return false;
+            }
+            
+            // 如果阈值为0或null，不进行判断
+            if (roomSportsThreshold == null || roomSportsThreshold <= 0) {
+                return false;
+            }
+            
+            // 进行比较判断
+            for (int i = 0; i < this.totalPointResult.size(); i++) {
+                Integer playerTotalPoint = this.totalPointResult.get(i);
+                
+        
+                
+                // 或者判断是否低于负阈值
+                if (playerTotalPoint <= -roomSportsThreshold) {
+                    CommLogD.info("玩家{}总积分{}低于负阈值{}，触发房间结束", 
+                                i, playerTotalPoint, -roomSportsThreshold);
+                    return true;
+                }
+            }
+            
+            return false;
+            
+        } catch (Exception e) {
+            CommLogD.error("检查特殊结束条件时发生异常", e);
+            return false;
+        }
+    }
+
+    //    简单截断：最简单，直接将超出部分截掉
+    private boolean checkAndTruncatePointsToThreshold() {
+    try {
+        Double roomSportsThreshold = this.room.getBaseRoomConfigure().getBaseCreateRoom().getRoomSportsThreshold();
+        
+        if (roomSportsThreshold == null || roomSportsThreshold <= 0) {
+            return false;
+        }
+        
+        boolean hasAdjustment = false;
+        
+        for (int i = 0; i < this.totalPointResult.size(); i++) {
+            Integer playerTotalPoint = this.totalPointResult.get(i);
+            PDKRoomPos roomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(i);
+            
+            // 截断到阈值范围内
+            if (playerTotalPoint > roomSportsThreshold) {
+                int adjustment = (int)(roomSportsThreshold - playerTotalPoint);
+                adjustPlayerPoint(roomPos, adjustment);
+                this.totalPointResult.set(i, roomSportsThreshold.intValue());
+                hasAdjustment = true;
+            } else if (playerTotalPoint < -roomSportsThreshold) {
+                int adjustment = (int)(-roomSportsThreshold - playerTotalPoint);
+                adjustPlayerPoint(roomPos, adjustment);
+                this.totalPointResult.set(i, -roomSportsThreshold.intValue());
+                hasAdjustment = true;
+            }
+        }
+        
+        return hasAdjustment;
+        
+    } catch (Exception e) {
+        CommLogD.error("截断积分到阈值时发生异常", e);
+        return false;
+    }
+}
+
+    /**
+     * 调整玩家积分
+     * @param roomPos 玩家位置
+     * @param adjustment 调整值（正数增加，负数减少）
+     */
+    private void adjustPlayerPoint(PDKRoomPos roomPos, int adjustment) {
+        // 调整玩家的总积分
+        int currentPoint = roomPos.getPoint();
+        roomPos.setPoint(currentPoint + adjustment);
+        
+        // 如果需要，也可以调整单局积分
+        int posId = roomPos.getPosID();
+        if (posId < this.pointList.size()) {
+            int currentSetPoint = this.pointList.get(posId);
+            this.pointList.set(posId, currentSetPoint + adjustment);
+        }
     }
 
     /**
