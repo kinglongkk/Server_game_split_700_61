@@ -470,20 +470,16 @@ public abstract class AbsRoomPos implements Serializable {
         if (RoomTypeEnum.UNION.equals(this.getRoom().getRoomTypeEnum())) {
             if (UnionDefine.UNION_ROOM_SPORTS_TYPE.BIG_WINNER.ordinal() == baseCreateRoom.getRoomSportsType()) {
                 if (isWinner) {
-                    // 大赢家：基础消耗 + 额外消耗
+                    // 大赢家：只计算额外消耗（基础消耗已在房间级别计算）
                     roomSportsPointConsumeCalc = Math.max(0D, CommMath.div(roomSportsPointConsume, sizeWinner));
-                    roomSportsPointConsumeCalc = CommMath.addDouble(roomSportsPointConsumeCalc, baseCreateRoom.getRoomSportsEveryoneConsume());
                     this.room.addFactRoomSportsConsume(roomSportsPointConsumeCalc);
                     return roomSportsPointConsumeCalc;
                 }
-                // 非大赢家：只有基础消耗
-                this.room.addFactRoomSportsConsume(baseCreateRoom.getRoomSportsEveryoneConsume());
-                return CommMath.FormatDouble(baseCreateRoom.getRoomSportsEveryoneConsume());
+                // 非大赢家：不消耗（基础消耗已在房间级别计算）
+                return 0D;
             } else {
-                // 每人付模式：所有玩家基础消耗
-                roomSportsPointConsumeCalc = CommMath.FormatDouble(baseCreateRoom.getRoomSportsEveryoneConsume());
-                this.room.addFactRoomSportsConsume(roomSportsPointConsumeCalc);
-                return roomSportsPointConsumeCalc;
+                // 每人付模式：不消耗（基础消耗已在房间级别计算）
+                return 0D;
             }
         }
         return 0D;

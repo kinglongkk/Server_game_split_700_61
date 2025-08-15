@@ -1482,10 +1482,10 @@ public abstract class AbsBaseRoom implements RoomImpl,Serializable {
 			}
 			
 			// 设置总成本
-			this.setSportsPointCost(CommMath.add(baseCreateRoom.getPrizePool(), bigWinnerConsume));
+			this.setSportsPointCost(CommMath.addDouble(baseCreateRoom.getPrizePool(), bigWinnerConsume));
 			
 			// 返回总消耗：基础消耗 + 大赢家消耗
-			return CommMath.add(baseConsume, bigWinnerConsume);
+			return CommMath.addDouble(baseConsume, bigWinnerConsume);
 		} else {
 			//奖金池设置
 			this.setSportsPointCost(baseCreateRoom.getPrizePool());
