@@ -1,0 +1,659 @@
+{
+  "1010000": {
+    "Id": 1010000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "福建省",
+    "Popular": 1,
+    "DefaultCity": 0,
+    "Game": "2,3,5,6,8,17,10,11,12,13,14,15,16,21,43,56,26,33,34,0,7,41,30"
+  },
+  "1010100": {
+    "Id": 1010100,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "莆田市",
+    "Popular": 0,
+    "DefaultCity": 1,
+    "Game": "17,10,14,33,34,0,7,41,30"
+  },
+  "1010101": {
+    "Id": 1010101,
+    "Type": 3,
+    "Ascription": 1010100,
+    "Name": "莆田市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "17,10,33,34,0,7,41,30"
+  },
+  "1010102": {
+    "Id": 1010102,
+    "Type": 3,
+    "Ascription": 1010100,
+    "Name": "仙游市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "14,33,34,0,7,41,30"
+  },
+  "1010200": {
+    "Id": 1010200,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "漳州市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "8,56,26,0,7,41,30"
+  },
+  "1010201": {
+    "Id": 1010201,
+    "Type": 3,
+    "Ascription": 1010200,
+    "Name": "漳州市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "8,0,7,41,30"
+  },
+  "1010202": {
+    "Id": 1010202,
+    "Type": 3,
+    "Ascription": 1010200,
+    "Name": "漳浦县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "56,26,0,7,41,30"
+  },
+  "1010300": {
+    "Id": 1010300,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "厦门市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "3,0,7,41,30"
+  },
+  "1010301": {
+    "Id": 1010301,
+    "Type": 3,
+    "Ascription": 1010300,
+    "Name": "厦门市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "3,0,7,41,30"
+  },
+  "1010400": {
+    "Id": 1010400,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "福州市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "5,0,7,41,30"
+  },
+  "1010401": {
+    "Id": 1010401,
+    "Type": 3,
+    "Ascription": 1010400,
+    "Name": "福州市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "5,0,7,41,30"
+  },
+  "1010500": {
+    "Id": 1010500,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "泉州市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "6,15,16,0,7,41,30"
+  },
+  "1010501": {
+    "Id": 1010501,
+    "Type": 3,
+    "Ascription": 1010500,
+    "Name": "泉州市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "6,0,7,41,30"
+  },
+  "1010502": {
+    "Id": 1010502,
+    "Type": 3,
+    "Ascription": 1010500,
+    "Name": "南安市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "16,0,7,41,30"
+  },
+  "1010503": {
+    "Id": 1010503,
+    "Type": 3,
+    "Ascription": 1010500,
+    "Name": "石狮市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "15,0,7,41,30"
+  },
+  "1010600": {
+    "Id": 1010600,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "宁德市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "11,0,7,41,30"
+  },
+  "1010601": {
+    "Id": 1010601,
+    "Type": 3,
+    "Ascription": 1010600,
+    "Name": "宁德市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "11,0,7,41,30"
+  },
+  "1010700": {
+    "Id": 1010700,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "三明市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "12,43,0,7,41,30"
+  },
+  "1010701": {
+    "Id": 1010701,
+    "Type": 3,
+    "Ascription": 1010700,
+    "Name": "三明市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "12,0,7,41,30"
+  },
+  "1010702": {
+    "Id": 1010702,
+    "Type": 3,
+    "Ascription": 1010700,
+    "Name": "宁化县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "43,0,7,41,30"
+  },
+  "1010800": {
+    "Id": 1010800,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "南平市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "13,21,0,7,41,30"
+  },
+  "1010801": {
+    "Id": 1010801,
+    "Type": 3,
+    "Ascription": 1010800,
+    "Name": "南平市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "13,0,7,41,30"
+  },
+  "1010802": {
+    "Id": 1010802,
+    "Type": 3,
+    "Ascription": 1010800,
+    "Name": "光泽县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "21,0,7,41,30"
+  },
+  "1010900": {
+    "Id": 1010900,
+    "Type": 2,
+    "Ascription": 1010000,
+    "Name": "龙岩市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "2,0,7,41,30"
+  },
+  "1010901": {
+    "Id": 1010901,
+    "Type": 3,
+    "Ascription": 1010900,
+    "Name": "龙岩市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "2,0,7,41,30"
+  },
+  "1020000": {
+    "Id": 1020000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "江苏省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "35,53,46,32,38,0,7,41,30"
+  },
+  "1020100": {
+    "Id": 1020100,
+    "Type": 2,
+    "Ascription": 1020000,
+    "Name": "镇江市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "35,53,38,0,7,41,30"
+  },
+  "1020101": {
+    "Id": 1020101,
+    "Type": 3,
+    "Ascription": 1020100,
+    "Name": "镇江市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "35,38,0,7,41,30"
+  },
+  "1020102": {
+    "Id": 1020102,
+    "Type": 3,
+    "Ascription": 1020100,
+    "Name": "扬中市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "53,38,0,7,41,30"
+  },
+  "1020200": {
+    "Id": 1020200,
+    "Type": 2,
+    "Ascription": 1020000,
+    "Name": "无锡市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "46,38,0,7,41,30"
+  },
+  "1020202": {
+    "Id": 1020202,
+    "Type": 3,
+    "Ascription": 1020200,
+    "Name": "宜兴市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "46,38,0,7,41,30"
+  },
+  "1020300": {
+    "Id": 1020300,
+    "Type": 2,
+    "Ascription": 1020000,
+    "Name": "南通市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "32,38,0,7,41,30"
+  },
+  "1020203": {
+    "Id": 1020203,
+    "Type": 3,
+    "Ascription": 1020300,
+    "Name": "海安县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "32,38,0,7,41,30"
+  },
+  "1030000": {
+    "Id": 1030000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "江西省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "42,40,19,25,44,28,20,26,51,0,7,41,30"
+  },
+  "1030100": {
+    "Id": 1030100,
+    "Type": 2,
+    "Ascription": 1030000,
+    "Name": "宜春市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "42,40,26,0,7,41,30"
+  },
+  "1030101": {
+    "Id": 1030101,
+    "Type": 3,
+    "Ascription": 1030100,
+    "Name": "宜春市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "42,26,0,7,41,30"
+  },
+  "1030102": {
+    "Id": 1030102,
+    "Type": 3,
+    "Ascription": 1030100,
+    "Name": "万载县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "40,26,0,7,41,30"
+  },
+  "1030103": {
+    "Id": 1030103,
+    "Type": 3,
+    "Ascription": 1030100,
+    "Name": "上高县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "40,26,0,7,41,30"
+  },
+  "1030200": {
+    "Id": 1030200,
+    "Type": 2,
+    "Ascription": 1030000,
+    "Name": "上饶市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "19,25,20,26,0,7,41,30"
+  },
+  "1030202": {
+    "Id": 1030202,
+    "Type": 3,
+    "Ascription": 1030200,
+    "Name": "余干县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "19,20,0,7,41,30"
+  },
+  "1030203": {
+    "Id": 1030203,
+    "Type": 3,
+    "Ascription": 1030200,
+    "Name": "玉山县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "25,26,0,7,41,30"
+  },
+  "1030300": {
+    "Id": 1030300,
+    "Type": 2,
+    "Ascription": 1030000,
+    "Name": "景德镇市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "44,26,51,0,7,41,30"
+  },
+  "1030302": {
+    "Id": 1030302,
+    "Type": 3,
+    "Ascription": 1030300,
+    "Name": "乐平市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "44,26,51,0,7,41,30"
+  },
+  "1030400": {
+    "Id": 1030400,
+    "Type": 2,
+    "Ascription": 1030000,
+    "Name": "鹰潭市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "28,0,7,41,30"
+  },
+  "1030401": {
+    "Id": 1030401,
+    "Type": 3,
+    "Ascription": 1030400,
+    "Name": "鹰潭市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "28,0,7,41,30"
+  },
+  "1040000": {
+    "Id": 1040000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "浙江省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "22,0,7,41,30"
+  },
+  "1040100": {
+    "Id": 1040100,
+    "Type": 2,
+    "Ascription": 1040000,
+    "Name": "金华市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "22,0,7,41,30"
+  },
+  "1040101": {
+    "Id": 1040101,
+    "Type": 3,
+    "Ascription": 1040100,
+    "Name": "金华市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "22,0,7,41,30"
+  },
+  "1050000": {
+    "Id": 1050000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "湖北省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "23,31,0,7,41,30"
+  },
+  "1050100": {
+    "Id": 1050100,
+    "Type": 2,
+    "Ascription": 1050000,
+    "Name": "黄石市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "23,0,7,41,30"
+  },
+  "1050102": {
+    "Id": 1050102,
+    "Type": 3,
+    "Ascription": 1050100,
+    "Name": "阳新县",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "23,0,7,41,30"
+  },
+  "1050200": {
+    "Id": 1050200,
+    "Type": 2,
+    "Ascription": 1050000,
+    "Name": "荆门市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "31,0,7,41,30"
+  },
+  "1050201": {
+    "Id": 1050201,
+    "Type": 3,
+    "Ascription": 1050200,
+    "Name": "荆门市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "31,0,7,41,30"
+  },
+  "1060000": {
+    "Id": 1060000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "山东省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "27,47,52,26,0,7,41,30"
+  },
+  "1060100": {
+    "Id": 1060100,
+    "Type": 2,
+    "Ascription": 1060000,
+    "Name": "青岛市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "27,0,7,41,30"
+  },
+  "1060101": {
+    "Id": 1060101,
+    "Type": 3,
+    "Ascription": 1060100,
+    "Name": "青岛市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "27,0,7,41,30"
+  },
+  "1060200": {
+    "Id": 1060200,
+    "Type": 2,
+    "Ascription": 1060000,
+    "Name": "枣庄市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "47,0,7,41,30"
+  },
+  "1060202": {
+    "Id": 1060202,
+    "Type": 3,
+    "Ascription": 1060200,
+    "Name": "滕州市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "47,0,7,41,30"
+  },
+  "1060300": {
+    "Id": 1060300,
+    "Type": 2,
+    "Ascription": 1060000,
+    "Name": "济宁市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "52,26,0,7,41,30"
+  },
+  "1060301": {
+    "Id": 1060301,
+    "Type": 3,
+    "Ascription": 1060300,
+    "Name": "济宁市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "52,26,0,7,41,30"
+  },
+  "1070000": {
+    "Id": 1070000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "河北省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "61,45,54,0,7,41,30"
+  },
+  "1070100": {
+    "Id": 1070100,
+    "Type": 2,
+    "Ascription": 1070000,
+    "Name": "衡水市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "61,0,7,41,30"
+  },
+  "1070101": {
+    "Id": 1070101,
+    "Type": 3,
+    "Ascription": 1070100,
+    "Name": "衡水市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "61,0,7,41,30"
+  },
+  "1070200": {
+    "Id": 1070200,
+    "Type": 2,
+    "Ascription": 1070000,
+    "Name": "保定市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "45,0,7,41,30"
+  },
+  "1070201": {
+    "Id": 1070201,
+    "Type": 3,
+    "Ascription": 1070200,
+    "Name": "保定市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "45,0,7,41,30"
+  },
+  "1070300": {
+    "Id": 1070300,
+    "Type": 2,
+    "Ascription": 1070000,
+    "Name": "邢台市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "54,0,7,41,30"
+  },
+  "1070301": {
+    "Id": 1070301,
+    "Type": 3,
+    "Ascription": 1070300,
+    "Name": "邢台市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "54,0,7,41,30"
+  },
+  "1080000": {
+    "Id": 1080000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "广东省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "48,0,7,41,30"
+  },
+  "1080100": {
+    "Id": 1080100,
+    "Type": 2,
+    "Ascription": 1070000,
+    "Name": "韶关市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "48,0,7,41,30"
+  },
+  "1080101": {
+    "Id": 1080101,
+    "Type": 3,
+    "Ascription": 1070100,
+    "Name": "韶关市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "48,0,7,41,30"
+  },
+  "1090000": {
+    "Id": 1090000,
+    "Type": 1,
+    "Ascription": 0,
+    "Name": "安徽省",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "57,38,0,7,41,30"
+  },
+  "1090100": {
+    "Id": 1090100,
+    "Type": 2,
+    "Ascription": 1090000,
+    "Name": "巢湖市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "57,38,0,7,41,30"
+  },
+  "1090101": {
+    "Id": 1090101,
+    "Type": 3,
+    "Ascription": 1090100,
+    "Name": "巢湖市",
+    "Popular": 0,
+    "DefaultCity": 0,
+    "Game": "57,38,0,7,41,30"
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "0": {
+    "Id": 0,
+    "Name": "hzmj",
+    "Type": 1
+  },
+  "2": {
+    "Id": 2,
+    "Name": "lymj",
+    "Type": 1
+  },
+  "3": {
+    "Id": 3,
+    "Name": "xmmj",
+    "Type": 1
+  },
+  "5": {
+    "Id": 5,
+    "Name": "fzmj",
+    "Type": 1
+  },
+  "6": {
+    "Id": 6,
+    "Name": "qzmj",
+    "Type": 1
+  },
+  "8": {
+    "Id": 8,
+    "Name": "zzmj",
+    "Type": 1
+  },
+  "17": {
+    "Id": 17,
+    "Name": "pt13mj",
+    "Type": 1
+  },
+  "10": {
+    "Id": 10,
+    "Name": "ptmj",
+    "Type": 1
+  },
+  "11": {
+    "Id": 11,
+    "Name": "ndmj",
+    "Type": 1
+  },
+  "12": {
+    "Id": 12,
+    "Name": "smmj",
+    "Type": 1
+  },
+  "13": {
+    "Id": 13,
+    "Name": "npmj",
+    "Type": 1
+  },
+  "14": {
+    "Id": 14,
+    "Name": "xymj",
+    "Type": 1
+  },
+  "15": {
+    "Id": 15,
+    "Name": "ssmj",
+    "Type": 1
+  },
+  "16": {
+    "Id": 16,
+    "Name": "namj",
+    "Type": 1
+  },
+  "21": {
+    "Id": 21,
+    "Name": " npgzmj",
+    "Type": 1
+  },
+  "22": {
+    "Id": 22,
+    "Name": "zjjhmj",
+    "Type": 1
+  },
+  "23": {
+    "Id": 23,
+    "Name": "hbyxmj",
+    "Type": 1
+  },
+  "27": {
+    "Id": 27,
+    "Name": "qdmj",
+    "Type": 1
+  },
+  "43": {
+    "Id": 43,
+    "Name": "nhmj",
+    "Type": 1
+  },
+  "35": {
+    "Id": 35,
+    "Name": "zjmj",
+    "Type": 1
+  },
+  "61": {
+    "Id": 61,
+    "Name": "hsmj",
+    "Type": 1
+  },
+  "42": {
+    "Id": 42,
+    "Name": "ycmj",
+    "Type": 1
+  },
+  "40": {
+    "Id": 40,
+    "Name": "wzmj",
+    "Type": 1
+  },
+  "19": {
+    "Id": 19,
+    "Name": "ygmj",
+    "Type": 1
+  },
+  "44": {
+    "Id": 44,
+    "Name": "lpmj",
+    "Type": 1
+  },
+  "31": {
+    "Id": 31,
+    "Name": "jmhhmj",
+    "Type": 1
+  },
+  "45": {
+    "Id": 45,
+    "Name": "bdmj",
+    "Type": 1
+  },
+  "24": {
+    "Id": 24,
+    "Name": "srmj",
+    "Type": 1
+  },
+  "28": {
+    "Id": 28,
+    "Name": "ytmj",
+    "Type": 1
+  },
+  "29": {
+    "Id": 29,
+    "Name": "ykmj",
+    "Type": 1
+  },
+  "47": {
+    "Id": 47,
+    "Name": "tzmj",
+    "Type": 1
+  },
+  "46": {
+    "Id": 46,
+    "Name": "yxmj",
+    "Type": 1
+  },
+  "32": {
+    "Id": 32,
+    "Name": "hamj",
+    "Type": 1
+  },
+  "36": {
+    "Id": 36,
+    "Name": "dymj",
+    "Type": 1
+  },
+  "37": {
+    "Id": 37,
+    "Name": "symj",
+    "Type": 1
+  },
+  "39": {
+    "Id": 39,
+    "Name": "csmj",
+    "Type": 1
+  },
+  "49": {
+    "Id": 49,
+    "Name": "yzmj",
+    "Type": 1
+  },
+  "48": {
+    "Id": 48,
+    "Name": "sgmj",
+    "Type": 1
+  },
+  "52": {
+    "Id": 52,
+    "Name": "jnmj",
+    "Type": 1
+  },
+  "53": {
+    "Id": 53,
+    "Name": "jsyzmj",
+    "Type": 1
+  },
+  "54": {
+    "Id": 54,
+    "Name": "tdhmj",
+    "Type": 1
+  },
+  "55": {
+    "Id": 55,
+    "Name": "xtmj",
+    "Type": 1
+  },
+  "56": {
+    "Id": 56,
+    "Name": "zpmj",
+    "Type": 1
+  },
+  "57": {
+    "Id": 57,
+    "Name": "chmj",
+    "Type": 1
+  },
+  "58": {
+    "Id": 58,
+    "Name": "hbmj",
+    "Type": 1
+  },
+  "1": {
+    "Id": 1,
+    "Name": "sss",
+    "Type": 2
+  },
+  "4": {
+    "Id": 4,
+    "Name": "nn",
+    "Type": 2
+  },
+  "7": {
+    "Id": 7,
+    "Name": "pdk",
+    "Type": 2
+  },
+  "9": {
+    "Id": 9,
+    "Name": "zjh",
+    "Type": 2
+  },
+  "18": {
+    "Id": 18,
+    "Name": "sg",
+    "Type": 2
+  },
+  "25": {
+    "Id": 25,
+    "Name": "ysdz",
+    "Type": 2
+  },
+  "26": {
+    "Id": 26,
+    "Name": "gdy",
+    "Type": 2
+  },
+  "33": {
+    "Id": 33,
+    "Name": "xyzb",
+    "Type": 2
+  },
+  "34": {
+    "Id": 34,
+    "Name": "pxcn",
+    "Type": 2
+  },
+  "38": {
+    "Id": 38,
+    "Name": "gd",
+    "Type": 2
+  },
+  "41": {
+    "Id": 41,
+    "Name": "wsk",
+    "Type": 2
+  },
+  "30": {
+    "Id": 30,
+    "Name": "DDZ",
+    "Type": 2
+  },
+  "20": {
+    "Id": 20,
+    "Name": "yglfl",
+    "Type": 2
+  },
+  "50": {
+    "Id": 50,
+    "Name": "sj",
+    "Type": 2
+  },
+  "62": {
+    "Id": 62,
+    "Name": "zypk",
+    "Type": 2
+  },
+  "51": {
+    "Id": 51,
+    "Name": "bw",
+    "Type": 2
+  },
+  "59": {
+    "Id": 59,
+    "Name": "sbp",
+    "Type": 2
+  },
+  "60": {
+    "Id": 60,
+    "Name": "wl",
+    "Type": 2
+  },
+  "73": {
+    "Id": 73,
+    "Name": "px6gt",
+    "Type": 2
+  },
+  "75": {
+    "Id": 75,
+    "Name": "px258mj",
+    "Type": 1
+  }
+}

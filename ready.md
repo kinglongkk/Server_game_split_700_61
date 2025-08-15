@@ -1,0 +1,5 @@
+roomSportsEveryoneConsume 每人付
+
+winScore
+sportsPoint
+sportsPointCost
