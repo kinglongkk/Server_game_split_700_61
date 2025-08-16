@@ -478,21 +478,29 @@ public abstract class AbsRoomPos implements Serializable {
             // 计算累计后的总竞技点
             double projectedTotalPoint = currentTotalPoint + gamePointChange;
             
-            // 如果累计后会超过阈值，调整本局变化量（除非明确跳过阈值限制）
+            // 默认使用原始的游戏竞技点变化
             double finalGamePointChange = gamePointChange;
-            if (!skipThresholdLimit && roomSportsThreshold > 0D && Math.abs(projectedTotalPoint) > roomSportsThreshold) {
-                if (projectedTotalPoint > 0D) {
-                    // 正向超限，调整为刚好达到阈值
-                    finalGamePointChange = roomSportsThreshold - currentTotalPoint;
-                } else {
-                    // 负向超限，调整为刚好达到负阈值
-                    finalGamePointChange = -roomSportsThreshold - currentTotalPoint;
+            
+            // 阈值限制逻辑：
+            // 1. 如果skipThresholdLimit=true，跳过所有阈值限制（用于PDKRoomSet中的特殊处理）
+            // 2. 如果是2人场，不在这里进行阈值限制，让PDKRoomSet统一处理
+            // 3. 只有非2人场且未跳过限制时才进行阈值检查
+            if (!skipThresholdLimit && roomSportsThreshold > 0D && this.getRoom().getPlayerNum() != 2) {
+                // 只对非2人场进行阈值限制
+                if (Math.abs(projectedTotalPoint) > roomSportsThreshold) {
+                    if (projectedTotalPoint > 0D) {
+                        // 正向超限，调整为刚好达到阈值
+                        finalGamePointChange = roomSportsThreshold - currentTotalPoint;
+                    } else {
+                        // 负向超限，调整为刚好达到负阈值
+                        finalGamePointChange = -roomSportsThreshold - currentTotalPoint;
+                    }
+                    
+                    // 记录调整信息
+                    CommLogD.info("玩家{}竞技点被限制: 原始变化={}, 调整后变化={}, 当前累计={}, 阈值={}", 
+                        this.getPlayer().getPid(), gamePointChange, finalGamePointChange, 
+                        currentTotalPoint, roomSportsThreshold);
                 }
-                
-                // 记录调整信息
-                CommLogD.info("玩家{}竞技点被限制: 原始变化={}, 调整后变化={}, 当前累计={}, 阈值={}", 
-                    this.getPlayer().getPid(), gamePointChange, finalGamePointChange, 
-                    currentTotalPoint, roomSportsThreshold);
             }
             
             // 保存房间竞技点消耗（固定不变）

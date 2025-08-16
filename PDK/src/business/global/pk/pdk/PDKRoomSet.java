@@ -821,6 +821,75 @@ public class PDKRoomSet extends AbsRoomSet {
                 return;
             }
             
+            // 判断是否为1局游戏
+            boolean isOneRoundGame = (room.getCount() == 1);
+            
+            if (isOneRoundGame) {
+                // 1局游戏：固定扣除roomSportsThreshold值
+                handleOneRoundGameThreshold(roomSportsThreshold);
+            } else {
+                // 多局游戏：按实际分数扣除，但有阈值保护
+                handleMultiRoundGameThreshold(roomSportsThreshold);
+            }
+            
+        } catch (Exception e) {
+            CommLogD.error("处理2人场roomSportsThreshold逻辑时发生异常", e);
+        }
+    }
+    
+    /**
+     * 处理1局游戏的roomSportsThreshold逻辑
+     */
+    private void handleOneRoundGameThreshold(Double roomSportsThreshold) {
+        try {
+            // 获取两个玩家的总积分
+            Integer player1TotalPoint = this.totalPointResult.get(0);
+            Integer player2TotalPoint = this.totalPointResult.get(1);
+            
+            // 找出输分和赢分的玩家
+            int loserPos = -1;
+            int winnerPos = -1;
+            
+            if (player1TotalPoint < player2TotalPoint) {
+                loserPos = 0;
+                winnerPos = 1;
+            } else if (player2TotalPoint < player1TotalPoint) {
+                loserPos = 1;
+                winnerPos = 0;
+            } else {
+                // 平局，不处理
+                return;
+            }
+            
+            // 1局游戏：输家固定扣除roomSportsThreshold值，赢家固定获得roomSportsThreshold值
+            PDKRoomPos loserRoomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(loserPos);
+            PDKRoomPos winnerRoomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(winnerPos);
+            
+            // 计算调整值
+            int loserAdjustment = -roomSportsThreshold.intValue() - this.totalPointResult.get(loserPos);
+            int winnerAdjustment = roomSportsThreshold.intValue() - this.totalPointResult.get(winnerPos);
+            
+            // 调整积分
+            adjustPlayerPointAndRelatedData(loserRoomPos, loserAdjustment, loserPos);
+            adjustPlayerPointAndRelatedData(winnerRoomPos, winnerAdjustment, winnerPos);
+            
+            // 更新总积分结果
+            this.totalPointResult.set(loserPos, -roomSportsThreshold.intValue());
+            this.totalPointResult.set(winnerPos, roomSportsThreshold.intValue());
+            
+            CommLogD.info("1局游戏固定扣分: 输家玩家{}扣除{}分，赢家玩家{}获得{}分", 
+                        loserPos, roomSportsThreshold.intValue(), winnerPos, roomSportsThreshold.intValue());
+            
+        } catch (Exception e) {
+            CommLogD.error("处理1局游戏roomSportsThreshold逻辑时发生异常", e);
+        }
+    }
+    
+    /**
+     * 处理多局游戏的roomSportsThreshold逻辑
+     */
+    private void handleMultiRoundGameThreshold(Double roomSportsThreshold) {
+        try {
             // 获取两个玩家的总积分
             Integer player1TotalPoint = this.totalPointResult.get(0);
             Integer player2TotalPoint = this.totalPointResult.get(1);
@@ -833,14 +902,12 @@ public class PDKRoomSet extends AbsRoomSet {
                 // 场景1：达到阈值 - 限制到阈值并结束房间
                 limitTwoPlayerPointsToThreshold(roomSportsThreshold);
                 room.isEnd = true;
-                CommLogD.info("2人场因达到roomSportsThreshold阈值结束: RoomID={}, 阈值={}", room.getRoomID(), roomSportsThreshold);
-            } else {
-                // 场景2：没有达到阈值但房间可能正常结束 - 处理剩余的roomSportsThreshold分数
-                handleTwoPlayerRemainingPoints(roomSportsThreshold);
+                CommLogD.info("2人场多局游戏因达到roomSportsThreshold阈值结束: RoomID={}, 阈值={}", room.getRoomID(), roomSportsThreshold);
             }
+            // 多局游戏不需要处理剩余分数，按实际分数结算即可
             
         } catch (Exception e) {
-            CommLogD.error("处理2人场roomSportsThreshold逻辑时发生异常", e);
+            CommLogD.error("处理多局游戏roomSportsThreshold逻辑时发生异常", e);
         }
     }
     
@@ -874,58 +941,7 @@ public class PDKRoomSet extends AbsRoomSet {
         }
     }
     
-    /**
-     * 处理2人场房间结束时剩余的roomSportsThreshold分数（场景2）
-     */
-    private void handleTwoPlayerRemainingPoints(Double roomSportsThreshold) {
-        try {
-            Integer player1TotalPoint = this.totalPointResult.get(0);
-            Integer player2TotalPoint = this.totalPointResult.get(1);
-            
-            // 找出输分的玩家和赢分的玩家
-            int loserPos = -1;
-            int winnerPos = -1;
-            int loserPoint = 0;
-            int winnerPoint = 0;
-            
-            if (player1TotalPoint < player2TotalPoint) {
-                loserPos = 0;
-                winnerPos = 1;
-                loserPoint = player1TotalPoint;
-                winnerPoint = player2TotalPoint;
-            } else if (player2TotalPoint < player1TotalPoint) {
-                loserPos = 1;
-                winnerPos = 0;
-                loserPoint = player2TotalPoint;
-                winnerPoint = player1TotalPoint;
-            } else {
-                // 平局，不需要处理
-                return;
-            }
-            
-            // 如果输分的玩家还没有输完roomSportsThreshold的值
-            if (loserPoint > -roomSportsThreshold) {
-                int remainingLoss = (int)(-roomSportsThreshold - loserPoint);
-                
-                // 输分的玩家直接扣完剩余的分数
-                PDKRoomPos loserRoomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(loserPos);
-                adjustPlayerPointAndRelatedData(loserRoomPos, remainingLoss, loserPos);
-                this.totalPointResult.set(loserPos, -roomSportsThreshold.intValue());
-                
-                // 赢分的玩家获得对应的分数
-                PDKRoomPos winnerRoomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(winnerPos);
-                adjustPlayerPointAndRelatedData(winnerRoomPos, -remainingLoss, winnerPos);
-                this.totalPointResult.set(winnerPos, winnerPoint - remainingLoss);
-                
-                CommLogD.info("2人场处理剩余分数：玩家{}扣除{}分(总分{}→{})，玩家{}获得{}分(总分{}→{})", 
-                            loserPos, remainingLoss, loserPoint, -roomSportsThreshold.intValue(),
-                            winnerPos, -remainingLoss, winnerPoint, winnerPoint - remainingLoss);
-            }
-            
-        } catch (Exception e) {
-            CommLogD.error("处理2人场剩余分数时发生异常", e);
-        }
-    }
+
     
     /**
      * 调整玩家积分及相关数据结构
@@ -1665,8 +1681,12 @@ public class PDKRoomSet extends AbsRoomSet {
         boolean roomEnd = false;
         if (this.room.getDissolveRoom() != null) {
             roomEnd = true;
-        }else if(room.getCurSetID() >= room.getCount()){
+        } else if(room.getCurSetID() >= room.getCount()){
             roomEnd = true;
+        } else if(room.isEnd) {
+            // 检查房间是否因为roomSportsThreshold阈值而结束
+            roomEnd = true;
+            CommLogD.info("房间因roomSportsThreshold阈值结束: RoomID={}, 当前局数={}", room.getRoomID(), room.getCurSetID());
         }
         return roomEnd;
     }

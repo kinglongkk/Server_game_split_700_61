@@ -13,7 +13,7 @@ import cenum.ChatType;
 import cenum.ClassType;
 import cenum.room.GameRoomConfigEnum;
 import cenum.room.RoomState;
-import com.ddm.server.websocket.def.ErrorCode;
+import com.ddm.server.common.CommLogD;import com.ddm.server.websocket.def.ErrorCode;
 import com.google.gson.Gson;
 import core.network.http.proto.SData_Result;
 import jsproto.c2s.cclass.BaseSendMsg;
@@ -498,5 +498,41 @@ public class PDKRoom extends PockerRoom {
 		if (isGodCard() && "x".equals(msg)) {
 			getCurSet().endSet();
 		}
+	}
+
+	/**
+	 * 开始游戏的其他条件检查
+	 * 检查所有玩家是否准备好，以及是否满足roomSportsThreshold条件
+	 */
+	@Override
+	public boolean startGameOtherCondition(long pid) {
+		// 首先检查基本条件：所有玩家是否准备好
+		if (!this.getRoomPosMgr().isAllReady()) {
+			return false;
+		}
+
+		// 检查roomSportsThreshold条件（只对2人场生效）
+		if (getPlayerNum() == 2) {
+			Double roomSportsThreshold = this.getBaseRoomConfigure().getBaseCreateRoom().getRoomSportsThreshold();
+			
+			if (roomSportsThreshold != null && roomSportsThreshold > 0) {
+				// 检查是否有玩家已经达到阈值，如果达到则不能开始新局
+				for (int i = 0; i < 2; i++) {
+					AbsRoomPos roomPos = this.getRoomPosMgr().getPosByPosID(i);
+					if (roomPos != null && roomPos.getPid() > 0) {
+						int playerTotalPoint = roomPos.getPoint();
+						
+						// 如果玩家已经达到阈值（输光或赢满），则不能开始新局
+						if (playerTotalPoint <= -roomSportsThreshold || playerTotalPoint >= roomSportsThreshold) {
+							CommLogD.info("玩家{}已达到roomSportsThreshold阈值{}，当前积分{}，不能开始新局", 
+								roomPos.getPid(), roomSportsThreshold, playerTotalPoint);
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 }
