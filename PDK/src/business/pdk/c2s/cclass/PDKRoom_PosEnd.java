@@ -13,6 +13,7 @@ public class PDKRoom_PosEnd{
 	public int pos = 0; //位置
 	public long pid = 0;//玩家pid
 	public int point = 0; // 本局积分变更
+	public int totalPoint = 0; // 玩家总积分
 	public int 			doubleNum = 0;				//加倍
 	public long baseMark = 0;// 底分
 	public int 			robClose;					//春天-1:反春天 0:没有春天或者饭反春天 1:春天

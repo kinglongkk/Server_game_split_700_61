@@ -274,6 +274,14 @@ public abstract class AbsRoomPos implements Serializable {
      * 更新玩家个人游戏记录
      */
     public void updatePlayerRoomAloneBO(int consumeValue, int sizeWinner, boolean isWinner, int dateTime, int endTime, double roomSportsPointConsume) {
+        updatePlayerRoomAloneBO(consumeValue, sizeWinner, isWinner, dateTime, endTime, roomSportsPointConsume, false);
+    }
+    
+    /**
+     * 更新玩家个人游戏记录
+     * @param skipThresholdLimit 是否跳过阈值限制
+     */
+    public void updatePlayerRoomAloneBO(int consumeValue, int sizeWinner, boolean isWinner, int dateTime, int endTime, double roomSportsPointConsume, boolean skipThresholdLimit) {
         if (Objects.isNull(this.getPlayerRoomAloneBO())) {
             return;
         }
@@ -299,8 +307,8 @@ public abstract class AbsRoomPos implements Serializable {
             this.getPlayerRoomAloneBO().setUpLevelId(this.upLevelId());
         }
         this.getPlayerRoomAloneBO().getBaseService().update(this.getPlayerRoomAloneBO().getUpdateKeyValue(), this.getPlayerRoomAloneBO().getId());
-        // 保存竞技点
-        this.saveSportsPoint(sportsPoint, roomSportsConsume);
+        // 保存竞技点（支持跳过阈值限制）
+        this.saveSportsPoint(sportsPoint, roomSportsConsume, skipThresholdLimit);
         if (Objects.nonNull(this.getPlayer())) {
             this.getPlayer().getExp().addVipExp();
         }
@@ -447,30 +455,56 @@ public abstract class AbsRoomPos implements Serializable {
      * 保存竞技点
      */
     public void saveSportsPoint(double sportsPointGame, double sportsPointRoom) {
+        saveSportsPoint(sportsPointGame, sportsPointRoom, false);
+    }
+    
+    /**
+     * 保存竞技点
+     * @param sportsPointGame 游戏竞技点
+     * @param sportsPointRoom 房间竞技点消耗
+     * @param skipThresholdLimit 是否跳过阈值限制（用于房间结束时的特殊处理）
+     */
+    public void saveSportsPoint(double sportsPointGame, double sportsPointRoom, boolean skipThresholdLimit) {
         if (null != this.getClubMemberBO() && RoomTypeEnum.UNION.equals(this.getRoom().getRoomTypeEnum())) {
-            // 阈值限制：按累计竞技点不超过 ±roomSportsThreshold 截断本局变化量
-            double finalGamePointChange = CommMath.subDouble(sportsPointGame, sportsPointRoom);
+            // 获取roomSportsThreshold限制
             double roomSportsThreshold = this.getRoom().getBaseRoomConfigure().getBaseCreateRoom().getRoomSportsThreshold();
-            if (roomSportsThreshold > 0D) {
-                double currentTotalPoint = this.getPoint();
-                double projectedTotalPoint = CommMath.addDouble(currentTotalPoint, finalGamePointChange);
-                if (Math.abs(projectedTotalPoint) > roomSportsThreshold) {
-                    if (projectedTotalPoint > 0D) {
-                        finalGamePointChange = CommMath.subDouble(roomSportsThreshold, currentTotalPoint);
-                    } else {
-                        finalGamePointChange = CommMath.subDouble(-roomSportsThreshold, currentTotalPoint);
-                    }
+            
+            // 获取当前累计竞技点
+            double currentTotalPoint = this.getPoint();
+            
+            // 计算本局竞技点变化（游戏竞技点 - 房间竞技点消耗）
+            double gamePointChange = sportsPointGame - sportsPointRoom;
+            
+            // 计算累计后的总竞技点
+            double projectedTotalPoint = currentTotalPoint + gamePointChange;
+            
+            // 如果累计后会超过阈值，调整本局变化量（除非明确跳过阈值限制）
+            double finalGamePointChange = gamePointChange;
+            if (!skipThresholdLimit && roomSportsThreshold > 0D && Math.abs(projectedTotalPoint) > roomSportsThreshold) {
+                if (projectedTotalPoint > 0D) {
+                    // 正向超限，调整为刚好达到阈值
+                    finalGamePointChange = roomSportsThreshold - currentTotalPoint;
+                } else {
+                    // 负向超限，调整为刚好达到负阈值
+                    finalGamePointChange = -roomSportsThreshold - currentTotalPoint;
                 }
+                
+                // 记录调整信息
+                CommLogD.info("玩家{}竞技点被限制: 原始变化={}, 调整后变化={}, 当前累计={}, 阈值={}", 
+                    this.getPlayer().getPid(), gamePointChange, finalGamePointChange, 
+                    currentTotalPoint, roomSportsThreshold);
             }
-
-            // 先落房间竞技点消耗（固定不变）
+            
+            // 保存房间竞技点消耗（固定不变）
             if (sportsPointRoom > 0D) {
                 this.getClubMemberBO().saveRoomSportsPoint(player, this.getRoom().getSpecialRoomId(), -sportsPointRoom, this.getRoom().getBaseRoomConfigure().getGameType().getId(), this.getPlayer().getCityId(), getRoom().getRoomID(), getRoom().getRoomKey());
             }
-
-            // 再落“截断后的游戏竞技点变化”，以保证累计刚好触达阈值边界
+            
+            // 保存调整后的游戏竞技点变化
             if (0D != finalGamePointChange) {
-                double adjustedGameSportsPoint = CommMath.addDouble(finalGamePointChange, sportsPointRoom);
+                // 重新计算实际的游戏竞技点，确保总变化为finalGamePointChange
+                double adjustedGameSportsPoint = finalGamePointChange + sportsPointRoom;
+                
                 this.getClubMemberBO().saveGameSportsPoint(player, this.getRoom().getSpecialRoomId(), adjustedGameSportsPoint, this.getRoom().getBaseRoomConfigure().getGameType().getId(), this.getPlayer().getCityId(), getRoom().getRoomID(), getRoom().getRoomKey());
             }
         }
@@ -489,16 +523,20 @@ public abstract class AbsRoomPos implements Serializable {
         if (RoomTypeEnum.UNION.equals(this.getRoom().getRoomTypeEnum())) {
             if (UnionDefine.UNION_ROOM_SPORTS_TYPE.BIG_WINNER.ordinal() == baseCreateRoom.getRoomSportsType()) {
                 if (isWinner) {
-                    // 大赢家：只计算额外消耗（基础消耗已在房间级别计算）
+                    // 大赢家：基础消耗 + 额外消耗
                     roomSportsPointConsumeCalc = Math.max(0D, CommMath.div(roomSportsPointConsume, sizeWinner));
+                    roomSportsPointConsumeCalc = CommMath.addDouble(roomSportsPointConsumeCalc, baseCreateRoom.getRoomSportsEveryoneConsume());
                     this.room.addFactRoomSportsConsume(roomSportsPointConsumeCalc);
                     return roomSportsPointConsumeCalc;
                 }
-                // 非大赢家：不消耗（基础消耗已在房间级别计算）
-                return 0D;
+                // 非大赢家：只有基础消耗
+                this.room.addFactRoomSportsConsume(baseCreateRoom.getRoomSportsEveryoneConsume());
+                return CommMath.FormatDouble(baseCreateRoom.getRoomSportsEveryoneConsume());
             } else {
-                // 每人付模式：不消耗（基础消耗已在房间级别计算）
-                return 0D;
+                // 每人付模式：所有玩家基础消耗
+                roomSportsPointConsumeCalc = CommMath.FormatDouble(baseCreateRoom.getRoomSportsEveryoneConsume());
+                this.room.addFactRoomSportsConsume(roomSportsPointConsumeCalc);
+                return roomSportsPointConsumeCalc;
             }
         }
         return 0D;
