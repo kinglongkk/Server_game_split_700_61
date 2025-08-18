@@ -893,14 +893,17 @@ public class UnionMemberMgr {
                 return SData_Result.make(ErrorCode.UNION_BACK_OFF_PLAYING, "您已申请退赛，当前无法进行比赛，请取消退赛申请或联系赛事举办方");
             }
         }
+        // 使用“门槛 + 人均消耗”作为进入房间的最低要求
+        double combinedThreshold = baseCreateRoom.getRoomSportsThreshold().doubleValue()
+                + baseCreateRoom.getRoomSportsEveryoneConsume().doubleValue();
         if(club.isZhongZhiClub()){
             //中至的判断0
-            if(!zhongZhiCheckRoomSportsThreshold(clubMember.getClubMemberBO(), baseCreateRoom.getRoomSportsThreshold().doubleValue())){
+            if(!zhongZhiCheckRoomSportsThreshold(clubMember.getClubMemberBO(), combinedThreshold)){
                 return SData_Result.make(ErrorCode.UNION_BELOW_THRESHOLD_VALUE, "比赛分低于加入房间的门槛值, 无法加入房间");
             }
         }else {
-            if (clubMember.getClubMemberBO().getSportsPoint() < baseCreateRoom.getRoomSportsThreshold().doubleValue()) {
-//            return SData_Result.make(ErrorCode.UNION_BELOW_THRESHOLD_VALUE, "BELOW_THRESHOLD SportsPoint:{%,.2f},SportsThreshold:{%,.2f}", clubMember.getClubMemberBO().getSportsPoint(), baseCreateRoom.getRoomSportsThreshold().doubleValue());
+            if (clubMember.getClubMemberBO().getSportsPoint() < combinedThreshold) {
+//            return SData_Result.make(ErrorCode.UNION_BELOW_THRESHOLD_VALUE, "BELOW_THRESHOLD SportsPoint:{%,.2f},Required:{%,.2f}", clubMember.getClubMemberBO().getSportsPoint(), combinedThreshold);
                 return SData_Result.make(ErrorCode.UNION_BELOW_THRESHOLD_VALUE, "比赛分低于加入房间的门槛值, 无法加入房间");
             }
         }
@@ -1021,8 +1024,12 @@ public class UnionMemberMgr {
                 return SData_Result.make(ErrorCode.UNION_BACK_OFF_PLAYING, "您已申请退赛，当前无法进行比赛，请取消退赛申请或联系赛事举办方");
             }
         }
-        if (clubMember.getClubMemberBO().getSportsPoint() < baseCreateRoom.getRoomSportsThreshold().doubleValue()) {
-            return SData_Result.make(ErrorCode.UNION_BELOW_THRESHOLD_VALUE, "BELOW_THRESHOLD SportsPoint:{%,.2f},SportsThreshold:{%,.2f}", clubMember.getClubMemberBO().getSportsPoint(), baseCreateRoom.getRoomSportsThreshold().doubleValue());
+        // 使用“门槛 + 人均消耗”作为进入房间的最低要求
+        double combinedThreshold2 = baseCreateRoom.getRoomSportsThreshold().doubleValue()
+                + baseCreateRoom.getRoomSportsEveryoneConsume().doubleValue();
+        if (clubMember.getClubMemberBO().getSportsPoint() < combinedThreshold2) {
+            // 保持与另一处提示一致
+            return SData_Result.make(ErrorCode.UNION_BELOW_THRESHOLD_VALUE, "比赛分低于加入房间的门槛值, 无法加入房间");
         }
         if (clubMember.getClubMemberBO().getBanGame() > 0) {
             // 被亲友圈管理员禁止加入房间。
