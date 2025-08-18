@@ -642,25 +642,35 @@ public class PDKRoomSet extends AbsRoomSet {
             bo.setTabId(this.room.getTabId());
         }
 
-        this.resultCalc();
-        this.onlyWinRightNowPoint();
-        this.calYiKaoPoint();
-        this.getPosDict().values().forEach(k -> calcPosPoint(k));
-        for (int i = 0; i < this.room.getPlayerNum(); i++) {
-            PDKRoomPos roomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(i);
-            PDKSetPos setPos = this.posDict.get(i);
-            PDKRoom_PosEnd posEnd = roomPos.calcPosEnd(setPos);
-            goldEnd(i, this.pointList.get(i));
-            if (CollectionUtils.isNotEmpty(this.sportsPointList)) {
-                this.sportsPointList.set(posEnd.pos, Objects.isNull(posEnd.sportsPoint) ? 0D : posEnd.sportsPoint);
+        // 检查是否为1局游戏且为2人场
+        boolean isOneRoundTwoPlayerGame = (room.getCount() == 1 && room.getPlayerNum() == 2);
+        Double roomSportsThreshold = this.room.getBaseRoomConfigure().getBaseCreateRoom().getRoomSportsThreshold();
+        
+        if (isOneRoundTwoPlayerGame && roomSportsThreshold != null && roomSportsThreshold > 0) {
+            // 1局2人游戏：直接按roomSportsThreshold设定值扣分，跳过正常结算
+            handleOneRoundGameDirectCalculation(roomSportsThreshold);
+        } else {
+            // 正常游戏结算流程
+            this.resultCalc();
+            this.onlyWinRightNowPoint();
+            this.calYiKaoPoint();
+            this.getPosDict().values().forEach(k -> calcPosPoint(k));
+            for (int i = 0; i < this.room.getPlayerNum(); i++) {
+                PDKRoomPos roomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(i);
+                PDKSetPos setPos = this.posDict.get(i);
+                PDKRoom_PosEnd posEnd = roomPos.calcPosEnd(setPos);
+                goldEnd(i, this.pointList.get(i));
+                if (CollectionUtils.isNotEmpty(this.sportsPointList)) {
+                    this.sportsPointList.set(posEnd.pos, Objects.isNull(posEnd.sportsPoint) ? 0D : posEnd.sportsPoint);
+                }
+                this.setEnd.posResultList.add(posEnd);
+                totalPointResult.add(roomPos.getPoint());
             }
-            this.setEnd.posResultList.add(posEnd);
-            totalPointResult.add(roomPos.getPoint());
-        }
 
-        // 在分数计算完成后，立即处理roomSportsThreshold逻辑（只针对2人场）
-        if (room.getPlayerNum() == 2) {
-            handleTwoPlayerRoomSportsThreshold();
+            // 多局游戏的roomSportsThreshold逻辑（只针对2人场）
+            if (room.getPlayerNum() == 2) {
+                handleMultiRoundGameThreshold(roomSportsThreshold);
+            }
         }
 
         room.getRoomPosMgr().setAllLatelyOutCardTime();
@@ -811,77 +821,87 @@ public class PDKRoomSet extends AbsRoomSet {
     
     
     /**
-     * 处理2人场roomSportsThreshold相关逻辑
+     * 处理1局游戏的直接计算（跳过正常结算，直接按roomSportsThreshold扣分）
      */
-    private void handleTwoPlayerRoomSportsThreshold() {
+    private void handleOneRoundGameDirectCalculation(Double roomSportsThreshold) {
         try {
-            Double roomSportsThreshold = this.room.getBaseRoomConfigure().getBaseCreateRoom().getRoomSportsThreshold();
-            
-            if (roomSportsThreshold == null || roomSportsThreshold <= 0) {
-                return;
-            }
-            
-            // 判断是否为1局游戏
-            boolean isOneRoundGame = (room.getCount() == 1);
-            
-            if (isOneRoundGame) {
-                // 1局游戏：固定扣除roomSportsThreshold值
-                handleOneRoundGameThreshold(roomSportsThreshold);
-            } else {
-                // 多局游戏：按实际分数扣除，但有阈值保护
-                handleMultiRoundGameThreshold(roomSportsThreshold);
-            }
-            
-        } catch (Exception e) {
-            CommLogD.error("处理2人场roomSportsThreshold逻辑时发生异常", e);
-        }
-    }
-    
-    /**
-     * 处理1局游戏的roomSportsThreshold逻辑
-     */
-    private void handleOneRoundGameThreshold(Double roomSportsThreshold) {
-        try {
-            // 获取两个玩家的总积分
-            Integer player1TotalPoint = this.totalPointResult.get(0);
-            Integer player2TotalPoint = this.totalPointResult.get(1);
-            
-            // 找出输分和赢分的玩家
+            // 找出输分和赢分的玩家（基于实际游戏结果）
             int loserPos = -1;
             int winnerPos = -1;
             
-            if (player1TotalPoint < player2TotalPoint) {
+            // 先进行基础的结算来确定输赢
+            this.resultCalc();
+            
+            // 根据pointList确定输赢
+            if (this.pointList.get(0) < this.pointList.get(1)) {
                 loserPos = 0;
                 winnerPos = 1;
-            } else if (player2TotalPoint < player1TotalPoint) {
+            } else if (this.pointList.get(1) < this.pointList.get(0)) {
                 loserPos = 1;
                 winnerPos = 0;
             } else {
-                // 平局，不处理
+                // 平局，按正常流程处理
+                this.onlyWinRightNowPoint();
+                this.calYiKaoPoint();
+                this.getPosDict().values().forEach(k -> calcPosPoint(k));
+                for (int i = 0; i < this.room.getPlayerNum(); i++) {
+                    PDKRoomPos roomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(i);
+                    PDKSetPos setPos = this.posDict.get(i);
+                    PDKRoom_PosEnd posEnd = roomPos.calcPosEnd(setPos);
+                    goldEnd(i, this.pointList.get(i));
+                    if (CollectionUtils.isNotEmpty(this.sportsPointList)) {
+                        this.sportsPointList.set(posEnd.pos, Objects.isNull(posEnd.sportsPoint) ? 0D : posEnd.sportsPoint);
+                    }
+                    this.setEnd.posResultList.add(posEnd);
+                    totalPointResult.add(roomPos.getPoint());
+                }
                 return;
             }
             
-            // 1局游戏：输家固定扣除roomSportsThreshold值，赢家固定获得roomSportsThreshold值
+            // 1局游戏：直接设置固定的积分变化，避免重复计算
             PDKRoomPos loserRoomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(loserPos);
             PDKRoomPos winnerRoomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(winnerPos);
             
-            // 计算调整值
-            int loserAdjustment = -roomSportsThreshold.intValue() - this.totalPointResult.get(loserPos);
-            int winnerAdjustment = roomSportsThreshold.intValue() - this.totalPointResult.get(winnerPos);
+            // 重置pointList为固定值（这个值会被后续流程使用）
+            int loserPointChange = -roomSportsThreshold.intValue();
+            int winnerPointChange = roomSportsThreshold.intValue();
             
-            // 调整积分
-            adjustPlayerPointAndRelatedData(loserRoomPos, loserAdjustment, loserPos);
-            adjustPlayerPointAndRelatedData(winnerRoomPos, winnerAdjustment, winnerPos);
+            this.pointList.set(loserPos, loserPointChange);
+            this.pointList.set(winnerPos, winnerPointChange);
             
-            // 更新总积分结果
-            this.totalPointResult.set(loserPos, -roomSportsThreshold.intValue());
-            this.totalPointResult.set(winnerPos, roomSportsThreshold.intValue());
+            // 直接设置玩家的最终积分，不通过累加
+            int loserOriginalPoint = loserRoomPos.getPoint();
+            int winnerOriginalPoint = winnerRoomPos.getPoint();
             
-            CommLogD.info("1局游戏固定扣分: 输家玩家{}扣除{}分，赢家玩家{}获得{}分", 
-                        loserPos, roomSportsThreshold.intValue(), winnerPos, roomSportsThreshold.intValue());
+            loserRoomPos.setPoint(loserOriginalPoint + loserPointChange);
+            winnerRoomPos.setPoint(winnerOriginalPoint + winnerPointChange);
+            
+            // 跳过会重复处理积分的方法，直接进行最终处理
+            // 不调用 onlyWinRightNowPoint(), calYiKaoPoint(), calcPosPoint() 避免重复计算
+            
+            for (int i = 0; i < this.room.getPlayerNum(); i++) {
+                PDKRoomPos roomPos = (PDKRoomPos) this.room.getRoomPosMgr().getPosByPosID(i);
+                PDKSetPos setPos = this.posDict.get(i);
+                
+                // 手动设置setPos的值，避免重复计算
+                setPos.setDeductPoint(this.pointList.get(i));
+                setPos.setEndPoint(this.pointList.get(i)); // 直接设置为变化量
+                
+                PDKRoom_PosEnd posEnd = roomPos.calcPosEnd(setPos);
+                goldEnd(i, this.pointList.get(i));
+                if (CollectionUtils.isNotEmpty(this.sportsPointList)) {
+                    this.sportsPointList.set(posEnd.pos, Objects.isNull(posEnd.sportsPoint) ? 0D : posEnd.sportsPoint);
+                }
+                this.setEnd.posResultList.add(posEnd);
+                totalPointResult.add(roomPos.getPoint());
+            }
+            
+            CommLogD.info("1局游戏固定扣分: 输家玩家{}扣除{}分({}→{})，赢家玩家{}获得{}分({}→{})", 
+                        loserPos, roomSportsThreshold.intValue(), loserOriginalPoint, loserRoomPos.getPoint(),
+                        winnerPos, roomSportsThreshold.intValue(), winnerOriginalPoint, winnerRoomPos.getPoint());
             
         } catch (Exception e) {
-            CommLogD.error("处理1局游戏roomSportsThreshold逻辑时发生异常", e);
+            CommLogD.error("处理1局游戏直接计算时发生异常", e);
         }
     }
     
@@ -890,6 +910,10 @@ public class PDKRoomSet extends AbsRoomSet {
      */
     private void handleMultiRoundGameThreshold(Double roomSportsThreshold) {
         try {
+            if (roomSportsThreshold == null || roomSportsThreshold <= 0) {
+                return;
+            }
+            
             // 获取两个玩家的总积分
             Integer player1TotalPoint = this.totalPointResult.get(0);
             Integer player2TotalPoint = this.totalPointResult.get(1);
